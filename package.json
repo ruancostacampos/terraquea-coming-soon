@@ -1,0 +1,22 @@
+{
+  "name": "terraquea-coming-soon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.9.1",
+    "parcel-reporter-static-files-copy": "^1.5.0"
+  },
+  "dependencies": {
+    "gsap": "^3.11.5",
+    "three": "^0.153.0"
+  },
+  "staticFiles": {
+    "staticOutPath": "assets"
+  }
+}
