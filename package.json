@@ -2,18 +2,21 @@
   "name": "terraquea-coming-soon",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "lodash": "^4.17.21",
     "parcel": "^2.9.1",
     "parcel-reporter-static-files-copy": "^1.5.0"
   },
   "dependencies": {
     "gsap": "^3.11.5",
+    "parcel-bundler": "^1.12.5",
     "three": "^0.153.0"
   },
   "staticFiles": {
