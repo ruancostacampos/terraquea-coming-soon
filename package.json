@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "gsap": "^3.11.5",
-    "parcel-bundler": "^1.12.5",
     "three": "^0.153.0"
   },
   "staticFiles": {
