@@ -40,10 +40,17 @@
         <a href="https://github.com/ruancostacampos/" target="_blank">Github</a>
         <a href="https://www.linkedin.com/in/ruancostacampos/" target="_blank">Linkedin</a>
     </div>
-    <audio controls autoplay loop>
+    <div id="loading" style="position: absolute; left: 50%; bottom: 50%; transform: translate(-50%, -50%);">
+        <div></div>
+        <div></div>
+    </div>
+    <div id="playButton">
+        <p>Ver...</p>
+    </div>
+    <audio id="music" controls loop hidden>
         <source src="audio/music.mp3" type="audio/mpeg">
     </audio>
-    <audio controls autoplay loop>
+    <audio id="windSound" controls loop hidden>
         <source src="audio/wind.mp3" type="audio/mpeg">
     </audio> 
     <script src="js/main.js" type="module"></script>

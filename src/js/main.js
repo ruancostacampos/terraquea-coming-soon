@@ -15,7 +15,7 @@ let showingDevInfo = false
 const LEAVES_COUNT = 180
 let animationSpeed = 7;
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     animationSpeed = 3
     let container = document.getElementById("container")
     let nElement = document.createElement("p")
@@ -85,7 +85,16 @@ gltfLoader.load('./assets/leaf/model.gltf',
         model.scale.set(0.01, 0.01, 0.01)
 
         idealLeaf = model
-        spawnLeaves()
+        let playButton = document.getElementById("playButton")
+        let loading = document.getElementById("loading")
+
+        gsap.to(loading, {
+            opacity: 0, duration: 0.3, ease: "easeIn", onComplete: () => {
+                loading.style.display = 'none';
+            }
+        })
+
+        gsap.to(playButton, { opacity: 1, duration: 0.3, ease: "easeInOut", duration: 0.5 })
     },
 
     // WHEN LOADING 
@@ -230,19 +239,6 @@ const zoomCameraAnimation = () => {
 }
 
 
-if (!playedStartAnimation) {
-    let element = document.getElementById("container")
-    let wind = document.getElementById("wind")
-    gsap.fromTo(element, { translateX: -50, opacity: 0 },
-        {
-            translateX: 0, opacity: 1, ease: "easeInOut", duration: 2, delay: 3, onComplete: () => {
-                playedStartAnimation = true
-                gsap.to(wind, { rotate: 360, duration: 0.8, opacity: 1, ease: "easeInOut" })
-            }
-        }
-    )
-}
-
 const onMouseMove = (e) => { // HANDLE MOUSE HOVER A LEAF
 
 
@@ -384,7 +380,7 @@ document.getElementById("wind").addEventListener("mouseenter", (e) => {
         disableLeafClick = true
     }
 
-    if(currentSelectedLeaf !== undefined){
+    if (currentSelectedLeaf !== undefined) {
         currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
         currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
         currentSelectedLeaf = undefined
@@ -412,6 +408,38 @@ document.getElementById("wind").addEventListener("mousedown", (e) => {
     zoomCameraAnimation()
 
 })
+
+document.getElementById("playButton").addEventListener("mouseup", (e) => {
+
+    let music = document.getElementById("music")
+    let windSound = document.getElementById("windSound")
+
+    gsap.to(e.target, {
+        opacity: 0, duration: 0.5, ease: "easeInOut", onComplete: () => {
+            e.target.style.display = 'none'
+        }
+    })
+
+    music.play()
+    windSound.play()
+    spawnLeaves()
+
+    let element = document.getElementById("container")
+    let wind = document.getElementById("wind")
+    gsap.fromTo(element, { translateX: -50, opacity: 0 },
+        {
+            translateX: 0, opacity: 1, ease: "easeInOut", duration: 2, delay: 3, onComplete: () => {
+                playedStartAnimation = true
+                gsap.to(wind, { rotate: 360, duration: 0.8, opacity: 1, ease: "easeInOut" })
+            }
+        }
+    )
+
+
+    playedStartAnimation = true
+
+})
+
 
 
 render()
