@@ -14,5 +14,25 @@
 {
     "autor": "David Hume",
     "mensagem": "A beleza das coisas existe no espírito de quem as contempla."
+},
+{
+    "autor": "Sêneca",
+    "mensagem": "Se vives de acordo com as leis da natureza, nunca serás pobre; se vives de acordo com as opiniões alheias, nunca serás rico."
+},
+{
+    "autor" : "Francis Bacon",
+    "mensagem" : "Só se pode vencer a natureza obedecendo-lhe."
+},
+{
+    "autor" : "Friedrich Nietzsche",
+    "mensagem": "⁠Uma coisa é necessário ter: um espírito leve por natureza ou um espírito aliviado pela arte e pelo saber."
+},
+{
+    "autor" : "Natalia Costa",
+    "mensagem" : "A beleza da natureza está em todos nós."
+},
+{
+    "autor" : "Sócrates",
+    "mensagem" : "Existe apenas um bem, o saber, e apenas um mal, a ignorância." 
 }
 ]
