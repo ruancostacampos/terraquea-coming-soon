@@ -114,22 +114,15 @@ h1 {
     background-color: rgb(36, 90, 49);
 }
 
-#smallBlackSquare {
+#wind {
     z-index: 1;
     position: absolute;
     right: 32px;
     top: 32px;
-    width: 12px;
-    height: 12px;
-    border: black solid 1px;
-    transition: all 0.2s ease-in-out;
-    background-color: white;
+    display: flex;
+    opacity: 0;
 }
 
-#smallBlackSquare:hover {
-    width: 18px;
-    height: 18px;
-}
 
 #devInfo {
     text-align: center;

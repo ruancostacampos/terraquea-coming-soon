@@ -13,6 +13,15 @@ let disableLeafHover = false
 let disableLeafClick = false
 let showingDevInfo = false
 const LEAVES_COUNT = 180
+let animationSpeed = 7;
+
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+    animationSpeed = 3
+    let container = document.getElementById("container")
+    let nElement = document.createElement("p")
+    nElement.innerHTML = 'Aperte numa folha para ler uma frase especial que eu guardei pra <u>você.</u>'
+    container.appendChild(nElement)
+}
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
 
@@ -141,7 +150,7 @@ const randomWindBehavior = (obj) => {
     // MOVE ANIMATION 
     gsap.fromTo(obj.position,
         { id: obj.id, x: "random(20, 120, 0.1)", y: "random(0, 5, 0.1)" },
-        { id: obj.id, x: -20, ease: "none", duration: (obj.position.x + 20) / 7, repeat: -1, repeatRefresh: true }
+        { id: obj.id, x: -20, ease: "none", duration: (obj.position.x + 20) / animationSpeed, repeat: -1, repeatRefresh: true }
     )
 
 }
@@ -193,7 +202,7 @@ const zoomCameraAnimation = () => {
 
     if (mainZoom) {
 
-        gsap.to(devSocial, {opacity: 0, translateX: 50, ease: "ease", duration: 1.3, delay: 1})
+        gsap.to(devSocial, { opacity: 0, translateX: 50, ease: "ease", duration: 1.3, delay: 1 })
         gsap.to(devInfo, {
             opacity: 0, translateX: 50, ease: "ease", duration: 1.3, delay: 1, onComplete: () => {
 
@@ -223,12 +232,13 @@ const zoomCameraAnimation = () => {
 
 if (!playedStartAnimation) {
     let element = document.getElementById("container")
-    gsap.fromTo(
-        element,
-        { translateX: -50, opacity: 0 },
+    let wind = document.getElementById("wind")
+    gsap.fromTo(element, { translateX: -50, opacity: 0 },
         {
-            translateX: 0, opacity: 1, ease: "easeInOut", duration: 2, delay: 3,
-            onComplete: () => { playedStartAnimation = true }
+            translateX: 0, opacity: 1, ease: "easeInOut", duration: 2, delay: 3, onComplete: () => {
+                playedStartAnimation = true
+                gsap.to(wind, { rotate: 360, duration: 0.8, opacity: 1, ease: "easeInOut" })
+            }
         }
     )
 }
@@ -239,6 +249,7 @@ const onMouseMove = (e) => { // HANDLE MOUSE HOVER A LEAF
     e.preventDefault();
 
     if (!playedStartAnimation) return // WHEN USER CLICK A LEAF WITHOUT FINISH THE INTRO ANIMATION
+    if (showingDevInfo) return
 
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
@@ -254,6 +265,8 @@ const onMouseMove = (e) => { // HANDLE MOUSE HOVER A LEAF
         disableLeafHover = false
         gsap.getTweensOf(currentSelectedLeaf.position).forEach(item => item.timeScale(1))
         gsap.getTweensOf(currentSelectedLeaf.rotation).forEach(item => item.timeScale(1))
+        currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
+        currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
         currentSelectedLeaf = undefined
     }
 
@@ -266,10 +279,16 @@ const onMouseMove = (e) => { // HANDLE MOUSE HOVER A LEAF
         if (intersects[0].object.parent !== currentSelectedLeaf && currentSelectedLeaf !== undefined) {
             gsap.getTweensOf(currentSelectedLeaf.position).forEach(item => item.timeScale(1))
             gsap.getTweensOf(currentSelectedLeaf.rotation).forEach(item => item.timeScale(1))
+            currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
+            currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
             currentSelectedLeaf = intersects[0].object.parent
         }
 
         currentSelectedLeaf = intersects[0].object.parent
+        currentSelectedLeaf.children[0].material = currentSelectedLeaf.children[0].material.clone()
+        currentSelectedLeaf.children[1].material = currentSelectedLeaf.children[1].material.clone()
+        currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(86, 227, 121)'))
+        currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(86, 227, 121)'))
         gsap.getTweensOf(currentSelectedLeaf.position).forEach(item => item.timeScale(0.4))
         gsap.getTweensOf(currentSelectedLeaf.rotation).forEach(item => item.timeScale(0.4))
         disableLeafHover = true
@@ -288,9 +307,9 @@ const onMouseClick = (e) => {
         return
     }
 
-    if (disableLeafClick) {
-        return
-    }
+    if (disableLeafClick) return
+
+    if (showingDevInfo) return
 
     document.body.style.cursor = 'default'
 
@@ -338,6 +357,8 @@ document.getElementById("closeMessage").addEventListener("mousedown", () => {
             currentSelectedLeaf.position.x = THREE.MathUtils.randFloat(35, 20)
             currentSelectedLeaf.position.y = THREE.MathUtils.randFloat(-8, 8)
             currentSelectedLeaf.position.z = THREE.MathUtils.randFloat(25, -15)
+            currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
+            currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
             randomWindBehavior(currentSelectedLeaf)
             disableLeafHover = false
             currentSelectedLeaf = undefined
@@ -357,26 +378,39 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight)
 })
 
-document.getElementById("smallBlackSquare").addEventListener("mouseenter", () => {
-    if (!disableLeafClick) { disableLeafClick = true }
-    if (!disableLeafHover) { disableLeafHover = true }
-})
-
-document.getElementById("smallBlackSquare").addEventListener("mouseleave", () => {
-    if (showingDevInfo === false) {
-        disableLeafClick = false
-        disableLeafHover = false
+document.getElementById("wind").addEventListener("mouseenter", (e) => {
+    if (!disableLeafHover) {
+        disableLeafHover = true
+        disableLeafClick = true
     }
+
+    if(currentSelectedLeaf !== undefined){
+        currentSelectedLeaf.children[0].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
+        currentSelectedLeaf.children[1].material.color.set(new THREE.Color('rgb(61, 143, 81)'))
+        currentSelectedLeaf = undefined
+        disableLeafHover = true
+        disableLeafClick = true
+    }
+
+    gsap.to(e.target, { rotate: 720, duration: 0.5, ease: "easeInOut" })
 })
 
-document.getElementById("smallBlackSquare").addEventListener("mousedown", (e) => {
+document.getElementById("wind").addEventListener("mouseleave", (e) => {
+    if (!showingDevInfo) {
+        disableLeafHover = false
+        disableLeafClick = false
+    }
+    gsap.to(e.target, { rotate: 360, duration: 0.5, ease: "easeInOut" })
+})
+
+document.getElementById("wind").addEventListener("mousedown", (e) => {
 
     let devInfo = document.getElementById("devInfo")
     if (gsap.getTweensOf(devInfo).length > 0 || !playedStartAnimation) return
 
     showingDevInfo = true
     zoomCameraAnimation()
-    
+
 })
 
 
